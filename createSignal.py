@@ -16,6 +16,7 @@ class TaxRate(QObject):
        def setRate(self,rate):
                if rate != self.__rate:
                        self.__rate = rate
+                       #Signal without paranthesis(no args) is called Short-circuit signal.
                        self.emit(SIGNAL("rateChanged"), self.__rate)
 
 
