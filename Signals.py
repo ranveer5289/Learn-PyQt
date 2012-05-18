@@ -26,7 +26,7 @@ class Form(QDialog):
 
                 self.setWindowTitle("Signals and Slots")
 
-
+        
         def getValue_dial(self):
                  print self.dial.value()
 
