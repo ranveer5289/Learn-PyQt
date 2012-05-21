@@ -5,9 +5,8 @@ from PyQt4.QtGui import *
 
 class Form(QDialog):
 
-    def __init__(self,parent=None):
+    def __init__(self,fruit,parent=None):
         super(Form,self).__init__(parent)
-        fruit = ["Apple","Banana","Guave","Grape","Papaya","Mango"]
         self.qListWidget = QListWidget()
         self.qListWidget.addItems(fruit)
 
@@ -15,7 +14,6 @@ class Form(QDialog):
         button2 = QPushButton("Remove")
         button3 = QPushButton("Edit")
         button4 = QPushButton("Up")
-        button5 = QPushButton("Down")
         button6 = QPushButton("Sort")
         button7 = QPushButton("Close")
         
@@ -25,7 +23,6 @@ class Form(QDialog):
         buttonLayout.addWidget(button2)
         buttonLayout.addWidget(button3)
         buttonLayout.addWidget(button4)
-        buttonLayout.addWidget(button5)
         buttonLayout.addWidget(button6)
         buttonLayout.addWidget(button7)
 
@@ -42,6 +39,7 @@ class Form(QDialog):
         self.connect(button3,SIGNAL("clicked()"),self.Edit)
         self.connect(button4,SIGNAL("clicked()"),self.Up)
         self.connect(button6,SIGNAL("clicked()"),self.Sort)
+        self.connect(button7,SIGNAL("clicked()"),self.accept)
         
 
 
@@ -56,7 +54,8 @@ class Form(QDialog):
 
     def Remove(self):
         row = self.qListWidget.currentRow()
-        self.qListWidget.takeItem(row)
+        item = self.qListWidget.takeItem(row)
+        del item
             
     
     def Edit(self):
@@ -66,31 +65,43 @@ class Form(QDialog):
         current_item_text = self.qListWidget.item(current_item_row)
         current_item_text.setText(text_replace)
 
+
+
+
     def Up(self):
-
-        
+       
         current_item_row = self.qListWidget.currentRow()
-        current_item_text = self.qListWidget.currentItem()
+        if current_item_row > 0:
+            current_item_text = self.qListWidget.item(current_item_row)
+            print str(current_item_text.text())
 
-        up_item_text = self.qListWidget.item(current_item_row+1)
-        up_item_row = current_item_row + 1
+            up_item_row = current_item_row - 1
+            up_item_text = self.qListWidget.item(up_item_row)
+            print str(up_item_text.text())
 
-        self.qListWidget.insertItem(current_item_row,up_item_text)
-        self.qListWidget.insertItem(up_item_row,current_item_text)
+            self.qListWidget.takeItem(current_item_row)
+            self.qListWidget.insertItem(current_item_row,up_item_text.text())
+            self.qListWidget.takeItem(up_item_row)
+            self.qListWidget.insertItem(up_item_row,current_item_text.text())
+        else:
+              print "Already at top of list."
 
     def Sort(self):
         self.qListWidget.sortItems()
+
+
+    def reject(self):
+        self.accept()
+
+    def accept(self):
+        QDialog.done(self,0)
 
         
          
 
 
 app = QApplication(sys.argv)
-form = Form()
+fruit = ["Apple","Banana","Guave","Grape","Papaya","Mango"]
+form = Form(fruit)
 form.show()
 app.exec_()
-            
-
-
-
-
